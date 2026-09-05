@@ -1,0 +1,554 @@
+<!DOCTYPE html>
+<html lang="id" class="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Modul Interaktif: Fikih & Artificial Intelligence</title>
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/tone/14.8.49/Tone.js"></script>
+
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    },
+                    colors: {
+                        brand: {
+                            50: '#f0fdf4',
+                            100: '#dcfce7',
+                            500: '#22c55e',
+                            600: '#16a34a',
+                            700: '#15803d',
+                            900: '#14532d',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            scroll-behavior: smooth;
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
+        .dark ::-webkit-scrollbar-thumb { background: #475569; }
+
+        /* Scroll Animations */
+        .reveal {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 0.8s cubic-bezier(0.5, 0, 0, 1);
+        }
+        .reveal.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Glassmorphism effects */
+        .glass {
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+        .dark .glass {
+            background: rgba(30, 41, 59, 0.7);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .gradient-text {
+            background: linear-gradient(135deg, #16a34a, #0d9488);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .dark .gradient-text {
+            background: linear-gradient(135deg, #4ade80, #2dd4bf);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-800 dark:bg-slate-900 dark:text-slate-200 transition-colors duration-300 antialiased relative overflow-hidden">
+
+    <!-- Audio Start Overlay (To bypass browser autoplay policies) -->
+    <div id="startOverlay" class="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/90 backdrop-blur-sm transition-opacity duration-500">
+        <div class="bg-white dark:bg-slate-800 p-8 rounded-3xl shadow-2xl max-w-md text-center mx-4 transform scale-100 transition-transform duration-300">
+            <i class="fas fa-book-open text-6xl text-brand-500 mb-4 animate-bounce"></i>
+            <h1 class="text-2xl font-bold mb-2">Modul Fikih AI</h1>
+            <p class="text-slate-600 dark:text-slate-400 mb-6 text-sm">Nyalakan suara perangkat Anda untuk pengalaman interaktif yang lebih baik.</p>
+            <button id="btnStart" class="w-full bg-brand-600 hover:bg-brand-700 text-white font-bold py-3 px-6 rounded-xl transition-colors shadow-lg shadow-brand-500/30">
+                Mulai Belajar <i class="fas fa-arrow-right ml-2"></i>
+            </button>
+        </div>
+    </div>
+
+    <!-- Navbar -->
+    <nav class="fixed top-0 w-full z-40 glass shadow-sm transition-colors duration-300">
+        <div class="max-w-4xl mx-auto px-4 py-3 flex justify-between items-center">
+            <div class="flex items-center gap-2 font-bold text-lg">
+                <i class="fas fa-robot text-brand-600 dark:text-brand-400"></i>
+                <span class="hidden sm:inline">Kajian Kontemporer</span>
+                <span class="sm:hidden">Kajian Fikih</span>
+            </div>
+            <button id="darkModeToggle" class="p-2 rounded-full hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors focus:outline-none" aria-label="Toggle Dark Mode">
+                <i class="fas fa-moon text-slate-600 dark:text-slate-300 text-xl" id="themeIcon"></i>
+            </button>
+        </div>
+    </nav>
+
+    <!-- Main Content Container -->
+    <main id="mainContent" class="max-w-4xl mx-auto px-4 pt-24 pb-20 opacity-0 transition-opacity duration-1000 h-screen overflow-y-auto">
+        
+        <!-- Header -->
+        <header class="text-center mb-16 reveal">
+            <div class="inline-block px-4 py-1 rounded-full bg-brand-100 dark:bg-brand-900/30 text-brand-700 dark:text-brand-300 font-semibold text-sm mb-4">
+                <i class="fas fa-globe-asia mr-1"></i> Ulasan Mendalam
+            </div>
+            <h1 class="text-4xl md:text-5xl font-extrabold mb-4 leading-tight">
+                Dua Hukum Gambar & Video AI <br class="hidden md:block">
+                <span class="gradient-text">Menurut Fatwa Syekh 'Atha</span>
+            </h1>
+            <p class="text-lg text-slate-600 dark:text-slate-400 italic max-w-2xl mx-auto">
+                "Teknologi Tidak Pernah Netral, Syariatlah yang Menentukan Hukumnya."
+            </p>
+        </header>
+
+        <!-- Section: Latar Belakang -->
+        <section class="mb-12 reveal">
+            <div class="bg-white dark:bg-slate-800 rounded-3xl p-6 md:p-8 shadow-xl shadow-slate-200/50 dark:shadow-none border border-slate-100 dark:border-slate-700">
+                <div class="flex items-center gap-4 mb-6 border-b border-slate-100 dark:border-slate-700 pb-4">
+                    <div class="bg-blue-100 dark:bg-blue-900/50 p-3 rounded-xl text-blue-600 dark:text-blue-400">
+                        <i class="fas fa-microchip text-2xl"></i>
+                    </div>
+                    <h2 class="text-2xl font-bold">I. Latar Belakang</h2>
+                </div>
+                
+                <p class="mb-4 leading-relaxed">
+                    Kehadiran Artificial Intelligence (AI) adalah revolusi teknologi terbesar abad ini. AI mampu membuat gambar, video realistis, suara identik, hingga tokoh yang sebenarnya tidak pernah ada.
+                </p>
+                
+                <div class="bg-slate-50 dark:bg-slate-900/50 rounded-2xl p-6 my-6 border-l-4 border-brand-500">
+                    <p class="text-slate-600 dark:text-slate-400 text-sm mb-2 font-semibold uppercase tracking-wider">Kaidah Ushul Fikih:</p>
+                    <p class="text-xl font-bold font-serif mb-2 text-right" dir="rtl">الحكم على الشيء فرع عن تصوره</p>
+                    <p class="text-md font-medium text-brand-700 dark:text-brand-400">
+                        "Menghukumi sesuatu bergantung pada pemahaman yang benar terhadap hakikatnya."
+                    </p>
+                </div>
+                
+                <p class="leading-relaxed">
+                    Pertanyaan fikihnya bukan <em>"Apakah AI canggih?"</em>, melainkan <strong>"Apa hakikat (realitas) dari hasil AI itu menurut syariat?"</strong> Sebelum menetapkan hukum, kita harus mengidentifikasi hakikat teknologinya.
+                </p>
+            </div>
+        </section>
+
+        <!-- Section: Dua Hukum Besar -->
+        <section class="mb-12 reveal">
+            <h2 class="text-2xl font-bold mb-6 flex items-center gap-3">
+                <i class="fas fa-balance-scale text-brand-500"></i> II. Dua Hukum Besar AI
+            </h2>
+            
+            <div class="grid md:grid-cols-2 gap-6">
+                <!-- Kategori 1 -->
+                <div class="bg-white dark:bg-slate-800 rounded-3xl p-6 border-t-4 border-green-500 shadow-lg relative overflow-hidden group hover:-translate-y-1 transition-transform cursor-pointer interactable">
+                    <div class="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
+                        <i class="fas fa-copy text-8xl text-green-500"></i>
+                    </div>
+                    <div class="relative z-10">
+                        <div class="flex items-center justify-between mb-4">
+                            <h3 class="text-xl font-bold">1. AI sebagai PENUKIL</h3>
+                            <span class="bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400 px-3 py-1 rounded-full text-sm font-bold flex items-center gap-1">
+                                <i class="fas fa-check-circle"></i> BOLEH
+                            </span>
+                        </div>
+                        <p class="text-slate-600 dark:text-slate-400 text-sm mb-4">
+                            Murni mengkopi realitas (Copy Reality) tanpa menciptakan hal baru. Hakikatnya sama dengan fotografi.
+                        </p>
+                        <ul class="space-y-2 text-sm font-medium">
+                            <li class="flex items-center gap-2"><i class="fas fa-camera text-green-500"></i> Memperbaiki kualitas foto</li>
+                            <li class="flex items-center gap-2"><i class="fas fa-video text-green-500"></i> Meningkatkan resolusi video</li>
+                            <li class="flex items-center gap-2"><i class="fas fa-paint-roller text-green-500"></i> Restorasi foto lama</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Kategori 2 -->
+                <div class="bg-white dark:bg-slate-800 rounded-3xl p-6 border-t-4 border-red-500 shadow-lg relative overflow-hidden group hover:-translate-y-1 transition-transform cursor-pointer interactable">
+                    <div class="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
+                        <i class="fas fa-magic text-8xl text-red-500"></i>
+                    </div>
+                    <div class="relative z-10">
+                        <div class="flex items-center justify-between mb-4">
+                            <h3 class="text-xl font-bold">2. AI sebagai PENCIPTA</h3>
+                            <span class="bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400 px-3 py-1 rounded-full text-sm font-bold flex items-center gap-1">
+                                <i class="fas fa-times-circle"></i> TERLARANG
+                            </span>
+                        </div>
+                        <p class="text-slate-600 dark:text-slate-400 text-sm mb-4">
+                            Menciptakan gambar baru dari *prompt*. Fatwa menilainya dekat dengan <em>Tashwir</em> (membuat gambar makhluk bernyawa).
+                        </p>
+                        <ul class="space-y-2 text-sm font-medium">
+                            <li class="flex items-center gap-2"><i class="fas fa-comment-dots text-red-500"></i> "Buatkan gambar tokoh fiktif"</li>
+                            <li class="flex items-center gap-2"><i class="fas fa-user-plus text-red-500"></i> Membuat wajah manusia buatan</li>
+                            <li class="flex items-center gap-2"><i class="fas fa-baby text-red-500"></i> Gambar makhluk bernyawa baru</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section: Deepfake & Analisa -->
+        <section class="mb-12 reveal">
+            <div class="bg-slate-800 dark:bg-slate-900 text-white rounded-3xl p-6 md:p-8 shadow-2xl relative overflow-hidden">
+                <!-- Background Pattern -->
+                <div class="absolute inset-0 opacity-10 pointer-events-none" style="background-image: radial-gradient(circle at 2px 2px, white 1px, transparent 0); background-size: 24px 24px;"></div>
+                
+                <div class="relative z-10">
+                    <h2 class="text-2xl font-bold mb-4 text-brand-400 flex items-center gap-3">
+                        <i class="fas fa-mask"></i> III. Bahaya Deepfake & Manipulasi
+                    </h2>
+                    <p class="mb-6 text-slate-300">
+                        Bagian kedua fatwa sangat relevan dengan era deepfake. Saat AI memanipulasi realitas, hukumnya bukan lagi sekadar soal gambar, melainkan menyentuh larangan berat dalam agama:
+                    </p>
+                    
+                    <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
+                        <div class="bg-slate-700/50 p-4 rounded-xl text-center backdrop-blur-sm border border-slate-600 interactable cursor-pointer">
+                            <i class="fas fa-comment-slash text-2xl text-red-400 mb-2"></i>
+                            <h4 class="font-bold text-sm">Dusta</h4>
+                        </div>
+                        <div class="bg-slate-700/50 p-4 rounded-xl text-center backdrop-blur-sm border border-slate-600 interactable cursor-pointer">
+                            <i class="fas fa-user-secret text-2xl text-orange-400 mb-2"></i>
+                            <h4 class="font-bold text-sm">Penipuan</h4>
+                        </div>
+                        <div class="bg-slate-700/50 p-4 rounded-xl text-center backdrop-blur-sm border border-slate-600 interactable cursor-pointer">
+                            <i class="fas fa-fire-alt text-2xl text-yellow-400 mb-2"></i>
+                            <h4 class="font-bold text-sm">Fitnah</h4>
+                        </div>
+                        <div class="bg-slate-700/50 p-4 rounded-xl text-center backdrop-blur-sm border border-slate-600 interactable cursor-pointer">
+                            <i class="fas fa-skull-crossbones text-2xl text-purple-400 mb-2"></i>
+                            <h4 class="font-bold text-sm">Mudarat</h4>
+                        </div>
+                    </div>
+
+                    <div class="bg-brand-900/40 p-4 rounded-xl border border-brand-500/30">
+                        <h4 class="font-bold text-brand-300 mb-2"><i class="fas fa-star-and-crescent mr-2"></i>Visualisasi Nabi & Rasul</h4>
+                        <p class="text-sm text-slate-300">
+                            Sangat dilarang keras memvisualisasikan Nabi menggunakan AI demi menjaga kehormatan kenabian, mencegah penyandaran ucapan dusta, dan menghindari pelecehan risalah.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section: Dakwah & Khilaf -->
+        <section class="mb-16 reveal">
+            <div class="grid md:grid-cols-2 gap-6">
+                <div class="bg-white dark:bg-slate-800 rounded-3xl p-6 shadow-sm border border-slate-200 dark:border-slate-700">
+                    <h3 class="text-lg font-bold mb-4 flex items-center gap-2"><i class="fas fa-mosque text-brand-500"></i> AI untuk Dakwah?</h3>
+                    <p class="text-sm text-slate-600 dark:text-slate-400 mb-3">AI tetap bisa digunakan untuk kebaikan selama tidak melanggar syariat:</p>
+                    <ul class="space-y-2 text-sm text-slate-700 dark:text-slate-300">
+                        <li class="flex items-start gap-2"><i class="fas fa-check text-green-500 mt-1"></i> <span>Mendesain objek non-makhluk hidup (pemandangan, kaligrafi).</span></li>
+                        <li class="flex items-start gap-2"><i class="fas fa-check text-green-500 mt-1"></i> <span>Memperbaiki kualitas audio kajian.</span></li>
+                        <li class="flex items-start gap-2"><i class="fas fa-check text-green-500 mt-1"></i> <span>Menerjemahkan bahasa & membuat infografik.</span></li>
+                    </ul>
+                </div>
+                
+                <div class="bg-amber-50 dark:bg-amber-900/20 rounded-3xl p-6 shadow-sm border border-amber-200 dark:border-amber-800/50">
+                    <h3 class="text-lg font-bold mb-4 text-amber-800 dark:text-amber-400 flex items-center gap-2"><i class="fas fa-book-reader"></i> Perbedaan Pendapat (Khilaf)</h3>
+                    <p class="text-sm text-amber-900/80 dark:text-amber-200/80 mb-3">
+                        Masalah ini adalah ranah <strong>Ijtihadiyyah</strong>. Ada ulama/lembaga (seperti MUI) yang mungkin memiliki pendekatan berbeda dalam merinci batasan fotografi, gambar digital, dan ilustrasi AI.
+                    </p>
+                    <p class="text-sm text-amber-900/80 dark:text-amber-200/80 font-medium">
+                        Pelajarilah dalil dan metode pengambilannya (istinbath), bukan sekadar taklid pada kesimpulan akhirnya.
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Quiz Section -->
+        <section id="quizSection" class="reveal scroll-mt-24">
+            <div class="bg-gradient-to-br from-brand-600 to-teal-700 rounded-3xl p-1 shadow-2xl">
+                <div class="bg-white dark:bg-slate-800 rounded-[23px] p-6 md:p-8">
+                    <div class="text-center mb-8">
+                        <div class="inline-block bg-brand-100 dark:bg-brand-900/50 text-brand-600 dark:text-brand-400 w-16 h-16 rounded-full flex items-center justify-center text-2xl mb-4 shadow-inner">
+                            <i class="fas fa-brain"></i>
+                        </div>
+                        <h2 class="text-3xl font-bold mb-2">Uji Pemahaman</h2>
+                        <p class="text-slate-500 dark:text-slate-400">Jawab 3 pertanyaan berikut untuk menyelesaikan modul.</p>
+                    </div>
+
+                    <!-- Quiz Container -->
+                    <div id="quizContainer" class="max-w-xl mx-auto">
+                        <!-- Progress Bar -->
+                        <div class="w-full bg-slate-200 dark:bg-slate-700 rounded-full h-2 mb-6">
+                            <div id="quizProgress" class="bg-brand-500 h-2 rounded-full transition-all duration-500 w-0"></div>
+                        </div>
+
+                        <!-- Question Area -->
+                        <div id="questionArea" class="mb-6 min-h-[150px]">
+                            <h3 id="questionText" class="text-xl font-semibold mb-4 leading-relaxed text-center"></h3>
+                            <div id="optionsContainer" class="space-y-3">
+                                <!-- Options will be injected here via JS -->
+                            </div>
+                        </div>
+
+                        <!-- Result Area (Hidden initially) -->
+                        <div id="resultArea" class="hidden text-center py-6">
+                            <i id="resultIcon" class="fas fa-trophy text-6xl text-yellow-400 mb-4 animate-bounce"></i>
+                            <h3 id="resultTitle" class="text-2xl font-bold mb-2"></h3>
+                            <p id="resultDesc" class="text-slate-600 dark:text-slate-400 mb-6"></p>
+                            <button id="btnRestart" class="bg-slate-800 dark:bg-slate-200 text-white dark:text-slate-900 font-bold py-2 px-6 rounded-xl hover:bg-slate-700 dark:hover:bg-white transition-colors">
+                                Ulangi Kuis
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Footer -->
+        <footer class="text-center mt-16 text-slate-500 dark:text-slate-500 text-sm reveal">
+            <p>Dibuat berdasarkan artikel Media Umat terkait Fatwa Syekh 'Atha.</p>
+            <p class="mt-2">Desain Interaktif &copy; 2026</p>
+        </footer>
+
+    </main>
+
+    <script>
+        // --- 1. Audio Engine Setup (Tone.js) ---
+        let audioInitialized = false;
+        
+        // Synth for UI clicks
+        const clickSynth = new Tone.MembraneSynth({
+            pitchDecay: 0.01,
+            octaves: 2,
+            oscillator: { type: 'sine' },
+            envelope: { attack: 0.001, decay: 0.1, sustain: 0, release: 0.1 }
+        }).toDestination();
+        clickSynth.volume.value = -15;
+
+        // Synth for Quiz Correct (Chime)
+        const successSynth = new Tone.PolySynth(Tone.Synth, {
+            oscillator: { type: "triangle" },
+            envelope: { attack: 0.05, decay: 0.2, sustain: 0.2, release: 1.5 }
+        }).toDestination();
+        successSynth.volume.value = -10;
+
+        // Synth for Quiz Incorrect (Buzzer)
+        const failSynth = new Tone.Synth({
+            oscillator: { type: "sawtooth" },
+            envelope: { attack: 0.01, decay: 0.3, sustain: 0, release: 0.1 }
+        }).toDestination();
+        failSynth.volume.value = -15;
+
+        // Sound Functions
+        const playClick = () => { if(audioInitialized) clickSynth.triggerAttackRelease("C4", "32n"); };
+        const playHover = () => { if(audioInitialized) clickSynth.triggerAttackRelease("G5", "64n", Tone.now(), 0.3); };
+        const playSuccess = () => { if(audioInitialized) successSynth.triggerAttackRelease(["C5", "E5", "G5"], "4n"); };
+        const playFail = () => { if(audioInitialized) failSynth.triggerAttackRelease("G2", "8n"); };
+
+        // Initialize Audio on Start Button
+        document.getElementById('btnStart').addEventListener('click', async () => {
+            await Tone.start();
+            audioInitialized = true;
+            playSuccess();
+            
+            // Hide Overlay, Show Main Content
+            const overlay = document.getElementById('startOverlay');
+            const mainContent = document.getElementById('mainContent');
+            
+            overlay.style.opacity = '0';
+            setTimeout(() => {
+                overlay.style.display = 'none';
+                mainContent.style.opacity = '1';
+                document.body.style.overflow = 'auto'; // allow scrolling on body now if needed, though we scroll on main
+                mainContent.classList.remove('h-screen', 'overflow-y-auto'); // let it flow normally
+                initScrollAnimations();
+            }, 500);
+        });
+
+        // Add interaction sounds to buttons/cards
+        document.addEventListener('mouseover', (e) => {
+            if (e.target.closest('.interactable') || e.target.tagName === 'BUTTON') {
+                playHover();
+            }
+        });
+
+        // --- 2. Dark Mode Logic ---
+        const html = document.documentElement;
+        const themeBtn = document.getElementById('darkModeToggle');
+        const themeIcon = document.getElementById('themeIcon');
+
+        // Check local storage or system preference
+        if (localStorage.getItem('theme') === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+            html.classList.add('dark');
+            themeIcon.classList.replace('fa-moon', 'fa-sun');
+        }
+
+        themeBtn.addEventListener('click', () => {
+            playClick();
+            html.classList.toggle('dark');
+            if (html.classList.contains('dark')) {
+                localStorage.setItem('theme', 'dark');
+                themeIcon.classList.replace('fa-moon', 'fa-sun');
+            } else {
+                localStorage.setItem('theme', 'light');
+                themeIcon.classList.replace('fa-sun', 'fa-moon');
+            }
+        });
+
+        // --- 3. Scroll Animations (Intersection Observer) ---
+        function initScrollAnimations() {
+            const reveals = document.querySelectorAll('.reveal');
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('active');
+                        // Optional: Unobserve after showing to only animate once
+                        // observer.unobserve(entry.target);
+                    }
+                });
+            }, { threshold: 0.1 });
+
+            reveals.forEach(reveal => observer.observe(reveal));
+        }
+
+        // --- 4. Quiz Logic ---
+        const quizData = [
+            {
+                question: "Menurut fatwa yang dibahas, apa hukum AI yang hanya menukil realitas (seperti memperbaiki foto lama)?",
+                options: [
+                    { text: "Boleh (Sama seperti fotografi)", isCorrect: true },
+                    { text: "Haram Mutlak", isCorrect: false },
+                    { text: "Makruh", isCorrect: false }
+                ]
+            },
+            {
+                question: "Mengapa AI Generatif yang membuat gambar manusia fiktif dilarang dalam pandangan fatwa ini?",
+                options: [
+                    { text: "Karena server AI memakan banyak listrik", isCorrect: false },
+                    { text: "Dianggap mirip dengan 'Tashwir' (Mencipta/Menyerupai ciptaan Allah)", isCorrect: true },
+                    { text: "Karena AI buatan orang barat", isCorrect: false }
+                ]
+            },
+            {
+                question: "Teknologi Deepfake yang mengubah wajah/suara tokoh politik dilarang karena...",
+                options: [
+                    { text: "Melanggar hak cipta semata", isCorrect: false },
+                    { text: "Resolusinya belum HD", isCorrect: false },
+                    { text: "Mengandung unsur dusta, penipuan, dan fitnah", isCorrect: true }
+                ]
+            }
+        ];
+
+        let currentQuestion = 0;
+        let score = 0;
+
+        const questionText = document.getElementById('questionText');
+        const optionsContainer = document.getElementById('optionsContainer');
+        const quizProgress = document.getElementById('quizProgress');
+        const questionArea = document.getElementById('questionArea');
+        const resultArea = document.getElementById('resultArea');
+
+        function loadQuestion() {
+            const q = quizData[currentQuestion];
+            questionText.textContent = `${currentQuestion + 1}. ${q.question}`;
+            optionsContainer.innerHTML = '';
+            
+            // Update Progress Bar
+            const progress = ((currentQuestion) / quizData.length) * 100;
+            quizProgress.style.width = `${progress}%`;
+
+            q.options.forEach((opt, index) => {
+                const btn = document.createElement('button');
+                btn.className = 'w-full text-left p-4 rounded-xl border-2 border-slate-200 dark:border-slate-700 hover:border-brand-500 dark:hover:border-brand-500 hover:bg-brand-50 dark:hover:bg-brand-900/20 transition-all font-medium text-slate-700 dark:text-slate-300 transform hover:-translate-y-1 active:translate-y-0';
+                btn.innerHTML = `<span class="inline-block w-6 h-6 text-center rounded-full bg-slate-200 dark:bg-slate-600 text-sm mr-2">${String.fromCharCode(65 + index)}</span> ${opt.text}`;
+                
+                btn.onclick = () => handleAnswer(opt.isCorrect, btn);
+                optionsContainer.appendChild(btn);
+            });
+        }
+
+        function handleAnswer(isCorrect, btnElement) {
+            // Disable all buttons temporarily
+            const buttons = optionsContainer.querySelectorAll('button');
+            buttons.forEach(b => b.disabled = true);
+
+            if (isCorrect) {
+                playSuccess();
+                btnElement.classList.remove('border-slate-200', 'hover:border-brand-500', 'dark:border-slate-700');
+                btnElement.classList.add('border-green-500', 'bg-green-100', 'dark:bg-green-900/50', 'text-green-800', 'dark:text-green-300');
+                score++;
+            } else {
+                playFail();
+                btnElement.classList.remove('border-slate-200', 'hover:border-brand-500', 'dark:border-slate-700');
+                btnElement.classList.add('border-red-500', 'bg-red-100', 'dark:bg-red-900/50', 'text-red-800', 'dark:text-red-300');
+                
+                // Highlight correct answer
+                const correctOptIndex = quizData[currentQuestion].options.findIndex(o => o.isCorrect);
+                buttons[correctOptIndex].classList.add('border-green-500', 'bg-green-50', 'dark:bg-green-900/20');
+            }
+
+            setTimeout(() => {
+                currentQuestion++;
+                if (currentQuestion < quizData.length) {
+                    loadQuestion();
+                } else {
+                    showResult();
+                }
+            }, 1200);
+        }
+
+        function showResult() {
+            questionArea.classList.add('hidden');
+            resultArea.classList.remove('hidden');
+            quizProgress.style.width = '100%';
+
+            const title = document.getElementById('resultTitle');
+            const desc = document.getElementById('resultDesc');
+            const icon = document.getElementById('resultIcon');
+
+            if (score === quizData.length) {
+                playSuccess();
+                setTimeout(playSuccess, 500); // fanfare
+                icon.className = "fas fa-medal text-6xl text-yellow-400 mb-4 animate-bounce";
+                title.textContent = "Mumtaz! Luar Biasa";
+                desc.textContent = "Anda memahami inti dari metodologi penentuan hukum fikih terhadap AI dengan sangat baik.";
+            } else if (score > 0) {
+                icon.className = "fas fa-thumbs-up text-6xl text-brand-500 mb-4";
+                title.textContent = "Bagus Sekali!";
+                desc.textContent = `Anda menjawab benar ${score} dari ${quizData.length} pertanyaan. Terus tingkatkan pemahaman literasi fikih teknologi Anda.`;
+            } else {
+                icon.className = "fas fa-book-reader text-6xl text-slate-400 mb-4";
+                title.textContent = "Mari Pelajari Lagi";
+                desc.textContent = "Silakan gulir ke atas dan baca kembali modul untuk memahami perbedaan mendasar AI sebagai penukil dan pencipta.";
+            }
+        }
+
+        document.getElementById('btnRestart').addEventListener('click', () => {
+            playClick();
+            currentQuestion = 0;
+            score = 0;
+            resultArea.classList.add('hidden');
+            questionArea.classList.remove('hidden');
+            loadQuestion();
+            // Scroll back to quiz top
+            document.getElementById('quizSection').scrollIntoView({ behavior: 'smooth' });
+        });
+
+        // Initialize first question
+        loadQuestion();
+
+    </script>
+</body>
+</html>
